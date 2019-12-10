@@ -6,7 +6,9 @@ from models import Station
 
 
 logger = logging.getLogger(__name__)
-
+STATIONS_TOPIC = "com.udacity.project1.cta.staions.table"
+ARRIVAL_TOPIC = "arrivals"
+TURNSTILE_SUMMARY_TOPIC = "TURNSTILE_SUMMARY"
 
 class Line:
     """Defines the Line Model"""
@@ -57,17 +59,17 @@ class Line:
     def process_message(self, message):
         """Given a kafka message, extract data"""
         # TODO: Based on the message topic, call the appropriate handler.
-        if message.topic() == "com.udacity.stations.table":
+        if STATIONS_TOPIC == message.topic():
             try:
                 value = json.loads(message.value())
                 self._handle_station(value)
             except Exception as e:
                 logger.fatal("bad station? %s, %s", value, e)
         # Set the conditional to the arrival topic
-        elif "arrivals": 
+        elif ARRIVAL_TOPIC in message.topic(): 
             self._handle_arrival(message)
         # Set the conditional to the KSQL Turnstile Summary Topic
-        elif "TURNSTILE_SUMMARY": 
+        elif TURNSTILE_SUMMARY_TOPIC == message.topic(): 
             json_data = json.loads(message.value())
             station_id = json_data.get("STATION_ID")
             station = self.stations.get(station_id)

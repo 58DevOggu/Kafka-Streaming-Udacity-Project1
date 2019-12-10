@@ -112,6 +112,6 @@ class Producer:
         if self.producer is None:
             return
 
-        logger.info("producer close incomplete - skipping")
-
+        logger.info("producer close incomplete - Review Comments - Missed in github version")
+        self.producer.flush()
     
